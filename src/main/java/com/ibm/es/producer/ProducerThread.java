@@ -18,82 +18,63 @@ package com.ibm.es.producer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.kafka.tools.ProducerPerformance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ProducerThread extends Thread {
 
-	private Thread thread;
-	private String threadName;
-	private Producer producer;
+  private Thread thread;
+  private String threadName;
+  private Producer producer;
 
-	private static Logger logger = LoggerFactory.getLogger(ProducerThread.class);
+  private static Logger logger = LoggerFactory.getLogger(ProducerThread.class);
 
-	ProducerThread(ThreadGroup threadGroup, String threadName, Producer producer) {
-		super(threadGroup, threadName);
-		this.threadName = threadName;
-		this.producer = producer;
-	}
+  ProducerThread(ThreadGroup threadGroup, String threadName, Producer producer) {
+    super(threadGroup, threadName);
+    this.threadName = threadName;
+    this.producer = producer;
+  }
 
-	@Override
-	public void run() {
-		if (!"".equals(producer.getSize())) {
-			switch (producer.getSize()) {
-				case "small":
-					producer.setNumRecords(60000L);
-					producer.setThroughput(1000);
-					break;
-				case "medium":
-					producer.setNumRecords(600000L);
-					producer.setThroughput(10000);
-					break;
-				case "large":
-					producer.setNumRecords(6000000L);
-					producer.setThroughput(100000);
-					break;
-			}
-		}
+  @Override
+  public void run() {
+    List<String> argumentsList =
+        new ArrayList<>(
+            Arrays.asList(
+                "--topic", producer.getTopic(),
+                "--num-records", String.valueOf(producer.getNumRecords()),
+                "--throughput", String.valueOf(producer.getThroughput()),
+                "--producer.config", producer.getConfigFilePath()));
 
-		List<String> argumentsList = new ArrayList<>( 
-			Arrays.asList(
-				"--topic", producer.getTopic(),
-				"--num-records", String.valueOf(producer.getNumRecords()),
-				"--throughput", String.valueOf(producer.getThroughput()),
-				"--producer.config", producer.getConfigFilePath()
-			)
-		);
+    if (producer.shouldPrintMetrics()) {
+      argumentsList.add("--print-metrics");
+    }
 
-		if (producer.shouldPrintMetrics()) {
-			argumentsList.add("--print-metrics");
-		}
-		
-		if ("".equals(producer.getPayloadFilePath())) {
-			argumentsList.add("--record-size");
-			argumentsList.add(String.valueOf(producer.getRecordSize()));
-		} else {
-			argumentsList.add("--payload-file");
-			argumentsList.add(producer.getPayloadFilePath());
+    if ("".equals(producer.getPayloadFilePath())) {
+      argumentsList.add("--record-size");
+      argumentsList.add(String.valueOf(producer.getRecordSize()));
+    } else {
+      argumentsList.add("--payload-file");
+      argumentsList.add(producer.getPayloadFilePath());
 
-			argumentsList.add("--payload-delimiter");
-			argumentsList.add(producer.getPayloadDelimiter());
-		}
+      argumentsList.add("--payload-delimiter");
+      argumentsList.add(producer.getPayloadDelimiter());
+    }
 
-		try {
-			String[] arguments = new String[argumentsList.size()];
-			arguments = argumentsList.toArray(arguments);
-			ProducerPerformance.main(arguments);
-		} catch (Exception error) {
-			logger.error("Failed to execute", error);
-		}
-	}
+    try {
+      String[] arguments = new String[argumentsList.size()];
+      arguments = argumentsList.toArray(arguments);
+      ProducerPerformance.main(arguments);
+    } catch (Exception error) {
+      logger.error("Failed to execute", error);
+    }
+  }
 
-	@Override
-	public void start() {
-		if (thread == null) {
-			thread = new Thread(this, threadName);
-			thread.start();
-		}
-	}
+  @Override
+  public void start() {
+    if (thread == null) {
+      thread = new Thread(this, threadName);
+      thread.start();
+    }
+  }
 }
