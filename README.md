@@ -5,7 +5,7 @@ This producer wraps the Kafka class ProducerPerformance, which is provided withi
 
 ## Getting Started
 
-These instructions will get you a copy of this sample producer up and running on your local machine. There are two options for running this producer. You can either [download](https://github.com/IBM/event-streams-sample-producer/blob/master/es-producer.jar?raw=true) and run our pre-built es-producer.jar:
+These instructions will get you a copy of this sample producer up and running on your local machine. There are two options for running this producer. You can either download and run our pre-built es-producer.jar from [here](https://github.com/IBM/event-streams-sample-producer/releases):
 
 ```
 java -jar es-producer.jar
