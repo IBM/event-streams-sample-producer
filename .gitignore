@@ -1,0 +1,4 @@
+# ignored project files
+/target
+/bin
+.project

@@ -44,7 +44,7 @@ public class Producer {
 
   // default values used by the tool
   private static final String DEFAULT_PRODUCER_CONFIG = "producer.config";
-  private static final String DEFAULT_SIZE = "small";
+  private static final String DEFAULT_SIZE = "";
   private static final Long DEFAULT_NUM_RECORDS = 60000L;
   private static final Integer DEFAULT_THROUGHPUT = -1;
   private static final String DEFAULT_PAYLOAD_DELIMITER = "\\n";
