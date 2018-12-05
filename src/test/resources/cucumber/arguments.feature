@@ -58,6 +58,14 @@ Feature: Arguments are correctly interpreted
          Then it was called with "--num-records" of "60000"
          And it was called with "--throughput" of "1000"
 
+    Scenario: If size is not provided but number of records and throughput are, then they are used
+        Given an instance of the es-producer
+        When I provide argument "--num-records" of "1"
+        When I provide argument "--throughput" of "1"
+        And I check the arguments that the Kafka performance script is called with
+        Then it was called with "--num-records" of "1"
+        And it was called with "--throughput" of "1"
+
     Scenario: If --num-threads is specified, that many threads are spawned, and workload is split between them
          Given an instance of the es-producer
          When I provide argument "--num-threads" of "2"

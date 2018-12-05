@@ -27,12 +27,14 @@ max.in.flight.requests.per.connection=1000
 # config.acks
 acks=0
 
+# config.jksPassword
+ssl.truststore.password=password
+
 ###########################################################
 # config.dontChange
 ###########################################################
 
 # config.sasl
 security.protocol=SASL_SSL
-ssl.truststore.password=password
 sasl.mechanism=PLAIN
 ssl.protocol=TLSv1.2

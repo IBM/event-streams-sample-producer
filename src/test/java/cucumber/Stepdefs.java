@@ -86,17 +86,11 @@ public class Stepdefs {
     Map<String[], String> requiredArgsMap = new HashMap<>();
     requiredArgsMap.put(new String[] {"--producer-config", "-c"}, "config.config");
     requiredArgsMap.put(new String[] {"--topic", "-t"}, "topic");
-    requiredArgsMap.put(new String[] {"--record-size", "-r"}, "100");
-    requiredArgsMap.put(new String[] {"--size", "-s"}, "small");
 
     for (Map.Entry<String[], String> entry : requiredArgsMap.entrySet()) {
       if (!testedArgs.contains(entry.getKey()[0]) && !testedArgs.contains(entry.getKey()[1])) {
-        // We can't provide both record size and payload file, so ensure this with the following if
-        if (!(entry.getKey()[0].equals("--record-size")
-            && (testedArgs.contains("--payload-file") || testedArgs.contains("-f")))) {
-          newArgsList.add(entry.getKey()[0]);
-          newArgsList.add(entry.getValue());
-        }
+        newArgsList.add(entry.getKey()[0]);
+        newArgsList.add(entry.getValue());
       }
     }
 

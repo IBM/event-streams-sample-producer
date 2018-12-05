@@ -30,7 +30,7 @@ We supply a template configuration file, `producer.config`. You will need to fil
 
 | Attribute                             | Description                                                                                                            |
 | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| bootstrap.servers                     | The URL used for bootstrapping knowledge about the rest of the cluster. This address can be found in the 'Connection information' page for your topic in the Event Streams UI. |                                              |
+| bootstrap.servers                     | The URL used for bootstrapping knowledge about the rest of the cluster. This address can be found in the Event Streams UI by clicking on either 'Connect to this cluster' or 'Connect to this topic', and viewing the 'Connect a client' tab. The value is provided in the 'Bootstrap server' section. |                                              |
 | ssl.truststore.location               | The location of the JKS keystore used to securley communicate with your Event Streams instance. This can be downloaded from the 'Connection information' page for your topic in the Event Streams UI.       |
 | sasl.jaas.config                      | SASL config options, an API key which authorizes production to your topic must be added to the 'password' string. API keys can be set up via the 'Connection information' page for your topic in the Event Streams UI. We recommend naming this key something memorable for future reference.      |
 
