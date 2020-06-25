@@ -4,7 +4,7 @@
 
 	<groupId>com.ibm.es</groupId>
 	<artifactId>event-streams-sample-producer</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<packaging>jar</packaging>
 
 	<name>event-streams-sample-producer</name>
@@ -12,6 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <kafka.version>2.5.0</kafka.version>
 	</properties>
 
 	<dependencies>
@@ -42,7 +43,7 @@
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka-clients</artifactId>
-			<version>1.0.0</version>
+			<version>${kafka.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.argparse4j</groupId>
@@ -62,7 +63,7 @@
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka-tools</artifactId>
-			<version>1.0.0</version>
+			<version>${kafka.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-cli</groupId>

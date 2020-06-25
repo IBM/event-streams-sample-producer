@@ -1,38 +1,50 @@
 # event-streams-sample-producer
 
-A sample workload producer for testing your Event Streams instance.
-This producer wraps the Kafka class ProducerPerformance, which is provided within the Kafka Tools jar. It will allow you to produce load to a Kafka cluster, by specifying either a size, or setting specific values for throughput and total messages.
+A sample workload producer for testing your [IBM Event Streams](https://ibm.github.io/event-streams/) instance.
+This producer wraps the Kafka class ProducerPerformance, which is provided within the Kafka Tools jar. It will allow you to produce load to a Kafka cluster by specifying either a size, or setting specific values for throughput and total messages.
 
 ## Getting Started
 
-These instructions will get you a copy of this sample producer up and running on your local machine. There are two options for running this producer. You can either download and run our pre-built es-producer.jar from [here](https://github.com/IBM/event-streams-sample-producer/releases):
+There are two options for running this producer. You can either [download](https://github.com/IBM/event-streams-sample-producer/releases) our pre-built es-producer.jar and run it using the following command:
 
 ```
 java -jar es-producer.jar
 ```
 
-Alternatively, you can clone this repository and build the project yourself. 
+Alternatively, you can clone this repository and build the project yourself.
 
 ## Prerequisites
 
-- Apache Maven (only if you are building yourself) - available [here](https://maven.apache.org/download.cgi)
-- Java (1.8 or later) - available [here](https://www.java.com/en/download/)
+- [Apache Maven](https://maven.apache.org/download.cgi) (only if you are building yourself)
+- [Java](https://www.java.com/en/download/) (1.8 or later)
 
 ## Building
 
 - Clone this project
-- Navigate to the root directory of the project and run `mvn install`
-- This will create `es-producer.jar` inside of the `target` directory
+- Navigate to the root directory of the project and run the following command:
+
+   `mvn install`
+
+- This will create an `es-producer.jar` file inside the `target` directory.
 
 ## Producer Configuration
 
-We supply a template configuration file, `producer.config`. You will need to fill this in to get the producer working. See the table below for details.
+We supply a template configuration file, `producer.config`. You will need to fill this in to get the producer working.
+
+The values enter in the Event Streams UI by selecting the topic to produce to, clicking on **Connect to this topic** and viewing the **Resources** tab on the **Topic connection** panel. The exact requirements depend on the version and configuration of the Event Streams instance. For more detailed instructions, see the [Event Streams documentation](https://ibm.github.io/event-streams/getting-started/testing-loads/).
+
+The following configuration options might be required:
 
 | Attribute                             | Description                                                                                                            |
-| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| bootstrap.servers                     | The URL used for bootstrapping knowledge about the rest of the cluster. This address can be found in the Event Streams UI by clicking on either 'Connect to this cluster' or 'Connect to this topic', and viewing the 'Connect a client' tab. The value is provided in the 'Bootstrap server' section. |                                              |
-| ssl.truststore.location               | The location of the JKS keystore used to securley communicate with your Event Streams instance. This can be downloaded from the 'Connection information' page for your topic in the Event Streams UI.       |
-| sasl.jaas.config                      | SASL config options, an API key which authorizes production to your topic must be added to the 'password' string. API keys can be set up via the 'Connection information' page for your topic in the Event Streams UI. We recommend naming this key something memorable for future reference.      |
+|  ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `bootstrap.servers`                     | The addressed used by the producer application to connect to Event Streams. |
+| `ssl.truststore.location`       | The location (path and filename) of the Event Streams certificate. |
+| `ssl.truststore.password`       | The password of the Event Streams certificate. |
+| `security.protocol`             | The security protocol to use for connections. `SSL` if TLS enabled or `SASL_SSL` for Event Streams 2019.4.2 and earlier.   |
+| `sasl.mechanism`              | The SASL mechanism to use for connections. `SCRAM-SHA-512` if using SCRAM credentials or `SASL_PLAIN` for Event Streams 2019.4.2 and earlier.   |
+| `sasl.jaas.config`            | The SASL configuration details. `org.apache.kafka.common.security.scram.ScramLoginModule required username="<username>" password="<password>";`, with the `<username>` and `<password>` replaced with the SCRAM credentials if using SCRAM. For Event Streams 2019.4.2 and earlier this should be set to `org.apache.kafka.common.security.plain.PlainLoginModule required username="token" password="<password>";` with the `<password>` replaced by an API key.
+| `ssl.keystore.location`       | The location (path and filename) of the `user.p12` keystore file if using TLS credentials.   |
+| `ssl.keystore.password`       | The password for the keystore if using TLS credentials.   |
 
 ## Running
 
@@ -40,7 +52,7 @@ We offer `-s` as a parameter for quick startup. This will automatically set mess
 
 To run the sample producer from the root of the project:
 
-```java -jar target/es-producer.jar -t <TOPIC> -s <SIZE> -r <RECORD_SIZE> -c <CONFIG_FILE>```
+```java -jar target/es-producer.jar -t <topic-name> -s <size> -r <record-size> -c <config-file>```
 
 Examples:
 
@@ -59,22 +71,19 @@ Run the command: ```mvn test``` in the root of the repository.
 | Parameter             | Shorthand | Longhand              | Type     | Description                                                                                                                               | Default          |
 | --------------------- | --------- | --------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
 | Topic                 | -t        | --topic               | `string` | The name of the topic to produce to                                                                                                       | `loadtest`       |
-| Num Records           | -n        | --num-records         | `int`    | The total number of messages to be sent (overrides size)                                                                                  | `60000`          |
-| Payload File          | -f        | --payload-file        | `string` | File to read the message payloads from. This works only for UTF-8 encoded text files. Payloads will be read from this  file and a payload will be randomly selected when sending messages. |   | 
+| Num Records           | -n        | --num-records         | `integer`| The total number of messages to be sent (overrides size)                                                                                  | `60000`          |
+| Payload File          | -f        | --payload-file        | `string` | File to read the message payloads from. This works only for UTF-8 encoded text files. Payloads will be read from this  file and a payload will be randomly selected when sending messages. |   |
 | Payload Delimiter     | -d        | --payload-delimiter   | `string` | Provides delimiter to be used when --payload-file is provided. Note that this parameter will be ignored if --payload-file is not provided | `\n`             |
-| Throughput            | -T        | --throughput          | `int`    | Throttle maximum message throughput to *approximately* *THROUGHPUT* messages per second. -1 means as fast as possible                     | `-1`             |
+| Throughput            | -T        | --throughput          | `integer`| Throttle maximum message throughput to *approximately* *THROUGHPUT* messages per second. -1 means as fast as possible                     | `-1`             |
 | Producer Config       | -c        | --producer-config     | `string` | Path to producer configuration file                                                                                                       | `producer.config`|
-| Print Metrics         | -m        | --print-metrics       | `bool`   | Whether to print out metrics at the end of the test                                                                                       |                  |
-| Num Threads           | -x        | --num-threads         | `int`    | The number of producer threads to run                                                                                                     | `1`              |
+| Print Metrics         | -m        | --print-metrics       | `boolean`| Whether to print out metrics at the end of the test                                                                                       |                  |
+| Num Threads           | -x        | --num-threads         | `integer`| The number of producer threads to run                                                                                                     | `1`              |
 | Size                  | -s        | --size                | `string` | Pre-defined combinations of message throughput and volume                                                                                 |                  |
-| Record Size           | -r        | --record-size         | `int`    | The size of each message to be sent in bytes                                                                                              | `100`            |
+| Record Size           | -r        | --record-size         | `integer`| The size of each message to be sent in bytes                                                                                              | `100`            |
 | Help                  | -h        | --help                | `N/A`    | Lists the available parameters                                                                                                            |                  |
 | Gen Config            | -g        | --gen-config          | `N/A`    | Generates the configuration file required to run the tool                                                                                 |                  |
 
-
-### Note
-
-You must **either** supply payload-file **or** record-size. You cannot supply both.
+**Note:** You must **either** supply `payload-file` **or** `record-size`. You cannot supply both.
 
 ### Size Options
 

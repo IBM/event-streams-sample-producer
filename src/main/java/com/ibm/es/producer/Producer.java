@@ -17,7 +17,6 @@ package com.ibm.es.producer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -39,8 +38,6 @@ public class Producer {
   private static Logger logger = LoggerFactory.getLogger(Producer.class);
   private static ResourceBundle producerTranslations =
       ResourceBundle.getBundle("MessageBundle", Locale.getDefault());
-  private static ResourceBundle configTranslations =
-      ResourceBundle.getBundle("ConfigBundle", Locale.getDefault());
 
   // default values used by the tool
   private static final String DEFAULT_PRODUCER_CONFIG = "producer.config";
@@ -89,20 +86,10 @@ public class Producer {
 
       overrideArgumentsWithEnvVars(producer);
 
-      // if generate config, load the template, and insert translated strings
       if (res.getBoolean("genConfig")) {
         try {
           StringBuilder template =
               new StringBuilder(IOUtils.resourceToString("/producer.config.template", null));
-          Enumeration<String> configKeys = configTranslations.getKeys();
-
-          while (configKeys.hasMoreElements()) {
-            String key = configKeys.nextElement();
-            String translatedText = configTranslations.getString(key);
-            int startOfInsert = template.indexOf(key);
-            int endOfInsert = startOfInsert + key.length();
-            template.replace(startOfInsert, endOfInsert, translatedText);
-          }
 
           FileUtils.writeStringToFile(new File("producer.config"), template.toString(), "UTF-8");
           System.out.println(producerTranslations.getString("producer.fileGenerated"));
